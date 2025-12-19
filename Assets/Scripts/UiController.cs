@@ -11,6 +11,7 @@ public class UiController : MonoBehaviour
     [SerializeField] private Slider playerHealthSlider;
     [SerializeField] private TMP_Text healthText;
     public GameObject gameOverPanel;
+    public GameObject pausePanel;
 
     void Awake()
     {
@@ -30,4 +31,6 @@ public class UiController : MonoBehaviour
         playerHealthSlider.value = PlayerController.Instance.playerHealth;
         healthText.text = playerHealthSlider.value + " / " + playerHealthSlider.maxValue;
     }
+
+
 }

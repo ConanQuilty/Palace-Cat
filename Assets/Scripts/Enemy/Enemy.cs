@@ -7,6 +7,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float damage;
+    [SerializeField] private float health;
+    [SerializeField] private int expToGive;
+
+
     private Vector3 direction;
     [SerializeField] private GameObject destroyEffect;
 
@@ -41,9 +46,24 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerController.Instance.TakeDamage(1);
+            PlayerController.Instance.TakeDamage(damage);
+
+        } 
+        // else if (collision.gameObject.CompareTag("Attack"))
+        // {
+        //     Destroy(gameObject);
+        //     Instantiate(destroyEffect, transform.position, transform.rotation);
+        // }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if(health <= 0)
+        {
             Destroy(gameObject);
-            Instantiate(destroyEffect, transform.position, transform.rotation);
+            Instantiate(destroyEffect, transform.position, transform.rotation); 
+            PlayerController.Instance.GetExperience(expToGive);
         }
     }
 }

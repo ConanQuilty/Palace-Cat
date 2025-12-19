@@ -11,9 +11,21 @@ public class PlayerController : MonoBehaviour
     public Vector3 playerMoveDirection;
     public float playerMaxHealth;
     public float playerHealth;
+    public int experience;
+    public int currentLevel;
+    public int maxLevel;
+    public List<int> playerLevels;
+
+
+
     public float attackTime;
     public float attackCooldown;
     public GameObject attackObject;
+    private bool isImmune;
+    [SerializeField] private float immunityDuration;
+    [SerializeField] private float immunityTimer;
+
+    
 
     void Awake()
     {
@@ -61,6 +73,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (immunityTimer > 0)
+        {
+            immunityTimer -= Time.deltaTime;
+        } else
+        {
+            isImmune = false;
+        }
+
     }
 
     //updates once every 2ms
@@ -72,18 +92,28 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        playerHealth -= damage;
-        UiController.Instance.UpdateHealthSlider();
-        if (playerHealth <= 0)
-        {
-            gameObject.SetActive(false);
-            GameManager.Instance.GameOver();
+        if(!isImmune){
+            isImmune = true;
+            immunityTimer = immunityDuration;
+            playerHealth -= damage;
+            UiController.Instance.UpdateHealthSlider();
+            if (playerHealth <= 0)
+            {
+                gameObject.SetActive(false);
+                GameManager.Instance.GameOver();
+            }
         }
     }
     
     public void Attack()
     {
-        Instantiate(attackObject, transform.position, transform.rotation);
+        Vector3 spawnOffset = new Vector3(0f, 0.5f, 0f);
+        Instantiate(attackObject, transform.position + spawnOffset, transform.rotation);
+    }
+
+    public void GetExperience(int expToGet)
+    {
+        experience += expToGet;
     }
 
 }
